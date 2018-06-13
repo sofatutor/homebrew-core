@@ -14,6 +14,7 @@ class Sphinx < Formula
   end
 
   option "with-mysql", "Force compiling against MySQL"
+  option "with-mysql@5.7", "Force compiling against MySQL 5.7"
   option "with-postgresql", "Force compiling against PostgreSQL"
   option "with-id64", "Force compiling with 64-bit ID support"
 
@@ -23,8 +24,9 @@ class Sphinx < Formula
 
   depends_on "re2" => :optional
   depends_on "mysql" => :optional
+  depends_on "mysql@5.7" => :optional
   depends_on "postgresql" => :optional
-  depends_on "openssl" if build.with? "mysql"
+  depends_on "openssl" if build.with?("mysql") || build.with?("mysql@5.7")
 
   resource "stemmer" do
     url "https://github.com/snowballstem/snowball.git",
@@ -63,7 +65,7 @@ class Sphinx < Formula
     args << "--enable-id64" if build.with? "id64"
     args << "--with-re2" if build.with? "re2"
 
-    if build.with? "mysql"
+    if build.with?("mysql") || build.with?("mysql@5.7")
       args << "--with-mysql"
     else
       args << "--without-mysql"
